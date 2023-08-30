@@ -1,0 +1,5 @@
+*.fbx !text !filter !merge !diff
+*.png !text !filter !merge !diff
+*.FBX !text !filter !merge !diff
+*.unity !text !filter !merge !diff
+*.meta !text !filter !merge !diff
