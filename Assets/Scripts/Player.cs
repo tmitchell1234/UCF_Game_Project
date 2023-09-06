@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,11 +17,15 @@ public class Player : MonoBehaviour
 
 
     private Vector2 playerMovementInput;
+
+
+
+
+
     private Vector3 moveDirection;
-
-
-
+    private Vector3 currentVelocity;
     private bool isMoving;
+    private bool hitJumpKey;
 
 
 
@@ -39,6 +44,7 @@ public class Player : MonoBehaviour
         // MovementJump();
 
         // characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
+        //Debug.Log("Current velocity: " + currentVelocity);
         return;
 
     }
@@ -61,7 +67,8 @@ public class Player : MonoBehaviour
         Vector3 rightRelative = inputVector.x * cameraRight;
 
         // Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
-        Vector3 moveDirection = forwardRelative + rightRelative;
+        // Vector3 moveDirection = forwardRelative + rightRelative;
+        moveDirection = forwardRelative + rightRelative;
 
         // apply vertical velocity (affected by gravity)
         moveDirection.y = verticalVelocity;
@@ -69,7 +76,7 @@ public class Player : MonoBehaviour
         // new method using Character Controller
         characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
 
-        isMoving = (moveDirection != Vector3.zero);
+        // isMoving = (moveDirection != Vector3.zero);
 
         float rotateSpeed = 15f;
         Vector3 cameraFacing = moveDirection;
@@ -77,6 +84,10 @@ public class Player : MonoBehaviour
         //transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
         transform.forward = Vector3.Slerp(transform.forward, cameraFacing, Time.deltaTime * rotateSpeed);
 
+
+        currentVelocity = characterController.velocity;
+        isMoving = (currentVelocity != Vector3.zero);
+        hitJumpKey = false; // reset for animation
     }
 
     private void ApplyGravity()
@@ -110,8 +121,28 @@ public class Player : MonoBehaviour
         verticalVelocity = 0f;
         verticalVelocity += jumpPower;
 
-        
+        hitJumpKey = true;
     } 
+
+
+    public bool IsMoving()
+    {
+        return isMoving;
+    }
+
+    public bool IsFalling()
+    {
+        return !characterController.isGrounded;
+    }
+
+    public bool HitJumpKey()
+    {
+        return hitJumpKey;
+    }
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
