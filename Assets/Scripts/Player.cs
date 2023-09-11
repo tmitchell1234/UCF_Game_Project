@@ -98,7 +98,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
+            if (!(verticalVelocity > 25f))
+                verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
         }
         
     }
