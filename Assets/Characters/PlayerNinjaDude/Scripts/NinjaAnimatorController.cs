@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class NinjaAnimatorController : MonoBehaviour
     [SerializeField] private GameObject swordHitBox;
 
     private bool oneTimeRunCheck;
+
+    private bool isAttackingState;
 
     private const string IS_MOVING = "IsMoving";
     private const string IS_FALLING = "IsFalling";
@@ -43,6 +46,11 @@ public class NinjaAnimatorController : MonoBehaviour
         animator.SetBool(HIT_JUMP_KEY, player.HitJumpKey());
         animator.SetBool(IS_FALLING, player.IsFalling());
 
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            isAttackingState = true;
+        else
+            isAttackingState = false;
+
 
         // attack animation
         // first, detect if mouse button has been clicked
@@ -60,6 +68,11 @@ public class NinjaAnimatorController : MonoBehaviour
             // FixSwordRotationOnRun();
 
         
+    }
+
+    public bool isAttacking()
+    {
+        return isAttackingState;
     }
 
     void FixSwordRotationOnRun()

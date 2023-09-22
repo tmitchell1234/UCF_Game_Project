@@ -10,30 +10,63 @@ public class Player : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] Transform camera;
 
+
+
+    // get player model to reference the animator controller
+    [SerializeField] GameObject playerModel;
+    private Animator playerAnimator;
+
+
+
+
     private CharacterController characterController;
 
 
     private Vector3 moveDirection;
     private Vector3 currentVelocity;
     private bool isMoving;
+
+    private bool isAttacking = false;
+
     private bool hitJumpKey;
 
     private bool isGrounded;
     [SerializeField] private float jumpPower;
     private float gravityValue = -9.81f;
-    [SerializeField] private float gravityMultiplier = 0.0000001f;
+    [SerializeField] private float gravityMultiplier = 0.001f;
     private float verticalVelocity = 0f;
+
+
+
+    private void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+        // playerModel.GetComponent<NinjaAnimatorController>().getAttackingState();
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (!characterController.isGrounded) ApplyGravity();
-        MovePlayer();
+        // isAttacking = animatorController.getAttackingState();
+
+        // do not allow player to move while attacking (even if in the air)
+        if (playerModel.GetComponent<NinjaAnimatorController>().isAttacking())
+        {
+            Debug.Log("Attacking!");
+            verticalVelocity = 0f;
+            characterController.Move(new Vector3(0, 0, 0));
+        }
+        else
+        {
+            if (!characterController.isGrounded) ApplyGravity();
+            MovePlayer();
+        }
+
         // MovementJump();
 
         // characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
         //Debug.Log("Current velocity: " + currentVelocity);
-        return;
 
     }
 
@@ -130,12 +163,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
 
-    private void Awake()
-    {
-        characterController = GetComponent<CharacterController>();
     }
 
 }
