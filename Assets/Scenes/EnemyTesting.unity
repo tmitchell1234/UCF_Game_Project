@@ -1593,17 +1593,17 @@ PrefabInstance:
     - target: {fileID: 4547426546565190057, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.34163907
+      value: -0.34163913
       objectReference: {fileID: 0}
     - target: {fileID: 4547426546565190057, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000116017755
+      value: -0.000000016171095
       objectReference: {fileID: 0}
     - target: {fileID: 4547426546565190057, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000042173713
+      value: -0.000000005878373
       objectReference: {fileID: 0}
     - target: {fileID: 6976169424614665002, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
@@ -1633,7 +1633,7 @@ PrefabInstance:
     - target: {fileID: 6976169424614665002, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1e-45
+      value: 1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 6976169424614665002, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
@@ -2215,7 +2215,7 @@ PrefabInstance:
     - target: {fileID: 2057794739845857356, guid: 39fb6c1a70a398940beb64c294aeafdb,
         type: 3}
       propertyPath: m_Name
-      value: TacoManModel
+      value: TacoManModel (Player(
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

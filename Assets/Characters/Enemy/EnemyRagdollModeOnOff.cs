@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyRagdollOnOff : MonoBehaviour
+public class EnemyRagdollModeOnOff : MonoBehaviour
 {
     public BoxCollider MainCollider;
     public GameObject EnemyRig;
@@ -18,7 +18,7 @@ public class EnemyRagdollOnOff : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -63,7 +63,7 @@ public class EnemyRagdollOnOff : MonoBehaviour
             body.isKinematic = false;
         }
 
-        
+
         MainCollider.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
     }
