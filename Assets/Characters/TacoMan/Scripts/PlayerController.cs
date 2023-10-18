@@ -1,77 +1,66 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 30f;
-    [SerializeField] private GameInput gameInput;
+    // This controller is specifically for Taco Man!
+
+
+
+
+    [Header("3D Movement")]
+    [Tooltip("Reference to the Cinemachine FreeLook camera used for the player")]
     [SerializeField] Transform camera;
 
+    [Tooltip("Movement variables")]
+    [SerializeField] float moveSpeed = 30f;
+    [SerializeField] float jumpPower;
+
+    private float verticalVelocity = 0f;
+
+    private bool hitJumpKey;
+    private bool isMoving;
 
 
-    // get player model to reference the animator controller
-    [SerializeField] GameObject playerModel;
-    private Animator playerAnimator;
-
-
+    [Tooltip("Physics variables")]
+    [SerializeField] float gravityValue = -9.81f;
+    [Tooltip("Adjust how fast player model falls downward")]
+    [SerializeField] private float gravityMultiplier = 0.001f;
 
 
     private CharacterController characterController;
+    [SerializeField] private GameInput gameInput;
+
 
 
     private Vector3 moveDirection;
     private Vector3 currentVelocity;
-    private bool isMoving;
-
-    private bool isAttacking = false;
-
-    private bool hitJumpKey;
-
     private bool isGrounded;
-    [SerializeField] private float jumpPower;
-    private float gravityValue = -9.81f;
-    [SerializeField] private float gravityMultiplier = 0.001f;
-    private float verticalVelocity = 0f;
-
-
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        // playerModel.GetComponent<NinjaAnimatorController>().getAttackingState();
     }
 
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
 
     // Update is called once per frame
     void Update()
     {
-        // isAttacking = animatorController.getAttackingState();
-
-        // do not allow player to move while attacking (even if in the air)
-        if (playerModel.GetComponent<NinjaAnimatorController>().isAttacking())
-        {
-            Debug.Log("Attacking!");
-            verticalVelocity = 0f;
-            characterController.Move(new Vector3(0, 0, 0));
-        }
-        else
-        {
-            if (!characterController.isGrounded) ApplyGravity();
-            MovePlayer();
-        }
-
-        // MovementJump();
-
-        // characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
-        //Debug.Log("Current velocity: " + currentVelocity);
-
+        MovePlayer();
+        if (!characterController.isGrounded) ApplyGravity();
+        //HandleJump();
     }
 
-
-    void MovePlayer()
+    public void MovePlayer()
     {
         // player inputs
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
@@ -98,12 +87,19 @@ public class Player : MonoBehaviour
         float rotateSpeed = 15f;
         Vector3 cameraFacing = moveDirection;
         cameraFacing.y = 0;
+
+        // rotate taco man model to forward direction with smooth, interpolated motion
         transform.forward = Vector3.Slerp(transform.forward, cameraFacing, Time.deltaTime * rotateSpeed);
 
 
-        currentVelocity = characterController.velocity;
+        currentVelocity = characterController.velocity; // for potential use in future by other systems
+
+
+        // reset for animation control
+        hitJumpKey = false;
+
+        //  set class variable to adjust animation state
         isMoving = (currentVelocity != Vector3.zero);
-        hitJumpKey = false; // reset for animation
     }
 
     private void ApplyGravity()
@@ -114,17 +110,20 @@ public class Player : MonoBehaviour
         }
         else
         {
+            verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
             if (!(verticalVelocity > 25f)) { }
-                verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
+                // verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
         }
-        
+
     }
 
 
-    public void MovementJump(InputAction.CallbackContext context)
+    // called from PlayerInput object in scene objects hierarchy, under GAME > InputManagers
+    public void HandleJump(InputAction.CallbackContext context)
     {
         // only do jump on key down
         if (!context.started) return;
+
 
         isGrounded = characterController.isGrounded;
 
@@ -139,7 +138,9 @@ public class Player : MonoBehaviour
         verticalVelocity += jumpPower;
 
         hitJumpKey = true;
-    } 
+    }
+
+
 
 
     public bool IsMoving()
@@ -156,14 +157,4 @@ public class Player : MonoBehaviour
     {
         return hitJumpKey;
     }
-
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
 }
