@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Physics variables")]
     [SerializeField] float gravityValue = -9.81f;
     [Tooltip("Adjust how fast player model falls downward")]
-    [SerializeField] private float gravityMultiplier = 0.001f;
+    [SerializeField] private float gravityMultiplier;
 
 
     private CharacterController characterController;
@@ -110,11 +110,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            
             verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
             if (!(verticalVelocity > 25f)) { }
                 // verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
         }
-
     }
 
 
@@ -138,6 +138,7 @@ public class PlayerController : MonoBehaviour
         verticalVelocity += jumpPower;
 
         hitJumpKey = true;
+        Debug.Log("Setting hitJumpKey to " + hitJumpKey);
     }
 
 
@@ -155,6 +156,8 @@ public class PlayerController : MonoBehaviour
 
     public bool HitJumpKey()
     {
+        if (hitJumpKey == true) Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
+        // else Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
         return hitJumpKey;
     }
 }
