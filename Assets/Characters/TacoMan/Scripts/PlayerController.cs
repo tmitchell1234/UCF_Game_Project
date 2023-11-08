@@ -8,6 +8,18 @@ public class PlayerController : MonoBehaviour
 {
     // This controller is specifically for Taco Man!
 
+    [Header("Player Object Reference")]
+    [Tooltip("For use in getting the current animation state")]
+    [SerializeField] GameObject playerObjReference;
+    private Animator playerAnimator;
+
+
+    // reference the red hitboxes to activate during attacks
+    [Tooltip("Red semi circle hitbox to display during attacks")]
+    [SerializeField] GameObject redSemiCircle;
+
+    [Tooltip("Red full circle hitbox to display during spin attack")]
+    [SerializeField] GameObject redFullCircle;
 
 
 
@@ -43,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        playerAnimator = playerObjReference.GetComponent<Animator>();
     }
 
 
@@ -55,8 +68,62 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
-        if (!characterController.isGrounded) ApplyGravity();
+        // update and check the current animation state
+        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+
+
+        // activate red hitboxes immediately on mouse down to improve responsiveness
+        // TODO: tweak how this works to get it to feel right
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Debug.Log("Activating red semicricle from PlayerController.cs mouse down!");
+            redSemiCircle.SetActive(true);
+        }
+
+
+
+
+        // stop player moving altogether if attacking (even if in midair):
+        if (!(stateInfo.IsName("SwordSlash1") || stateInfo.IsName("SwordSlash2")))
+        {
+            // hide the red hitboxes if not attacking
+            redSemiCircle.SetActive(false);
+            redFullCircle.SetActive(false);
+
+            MovePlayer();
+            if (!characterController.isGrounded) ApplyGravity();
+        }
+
+        // if the player is attacking, reset all vertical velocity to 0
+        // this lets the player hover in midair when attacking
+        else
+        {
+            verticalVelocity = 0f;
+
+
+
+            // TODO: Change this section to differentiate between normal attacks and spin attacks
+
+            // display the red circle hitboxes when attacking
+            redSemiCircle.SetActive(true);
+            //redFullCircle.SetActive(true);
+        }
+
+
+
+        // if player is spin attacking, activate the red hit circle
+        if (stateInfo.IsName("SpinAttack"))
+        {
+            Debug.Log("Activating red hit circle!");
+            redFullCircle.SetActive(true);
+        }
+
+        else
+        {
+            redFullCircle.SetActive(false);
+        }
+
+        
         //HandleJump();
     }
 

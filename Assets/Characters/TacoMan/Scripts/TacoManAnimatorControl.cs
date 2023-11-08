@@ -21,6 +21,9 @@ public class TacoManAnimatorControl : MonoBehaviour
     private const string HIT_JUMP_KEY = "HitJumpKey";
     private const string MOUSE_CLICKED = "MouseClicked";
     private const string DOUBLECLICK = "DoubleClicked";
+    private const string HOLDINGT = "HoldingT";
+    private const string HOLDINGCLICK = "HoldingClick";
+
 
 
     // used to keep track of time in seconds passed to control multi-attack moves
@@ -34,12 +37,21 @@ public class TacoManAnimatorControl : MonoBehaviour
     private System.DateTime spaceTimerCurrent;
 
 
+
+
+    // used to track if T and mouse held down for spin attack
+    private bool holdingT;
+    private bool holdingClick;
+
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         animator.SetBool(IS_MOVING, false);
         clickActive = false;
         jumpActive = false;
+        holdingT = false;
+        holdingClick = false;
     }
 
 
@@ -88,38 +100,74 @@ public class TacoManAnimatorControl : MonoBehaviour
         }
 
 
-        // attack animation
-        // first, detect if mouse button has been clicked
-        if (!clickActive)
+
+        // check for spin attack input first, then check for a mouse click
+        if (Input.GetKey(KeyCode.T))
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            holdingT = true;
+            animator.SetBool(HOLDINGT, true);
+
+
+            if (Input.GetKey(KeyCode.Mouse0))
             {
-                Debug.Log("Clicked mouse!");
-
-
-                animator.SetBool(MOUSE_CLICKED, true);
-
-                clickActive = true;
-                clickTimerStart = System.DateTime.Now;
+                holdingClick = true;
+                animator.SetBool(HOLDINGCLICK, true);
             }
         }
-        else if (clickActive)// click is active, activate second attack if applicable and expire both after 0.3 seconds
-        {
-            System.TimeSpan timeSpan = clickTimerCurrent - clickTimerStart;
 
-            if (timeSpan.TotalSeconds > 0.3)
+        // else if the player is not holding down T, play the regular attack animation
+
+        else
+        {
+            // allow player to keep spin attacking if T is let go of but mouse is still held down
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("SpinAttack"))
             {
-                Debug.Log("Deactivating clickActive in TacoManAnimatorControl.cs");
-                clickActive = false;
-                animator.SetBool(MOUSE_CLICKED, false);
-                animator.SetBool(DOUBLECLICK, false);
+                if (Input.GetKey(KeyCode.Mouse0))
+                    return;
             }
-            else if (Input.GetKeyDown(KeyCode.Mouse0))
+
+
+            // set the holding T and holding click booleans to false
+            holdingT = false;
+            animator.SetBool(HOLDINGT, false);
+            holdingClick = false;
+            animator.SetBool(HOLDINGCLICK, false);
+
+
+            // attack animation
+            // first, detect if mouse button has been clicked
+            if (!clickActive)
             {
-                Debug.Log("Registered DoubleClick!");
-                animator.SetBool(DOUBLECLICK, true);
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    Debug.Log("Clicked mouse!");
+
+
+                    animator.SetBool(MOUSE_CLICKED, true);
+
+                    clickActive = true;
+                    clickTimerStart = System.DateTime.Now;
+                }
+            }
+            else if (clickActive)// click is active, activate second attack if applicable and expire both after 0.3 seconds
+            {
+                System.TimeSpan timeSpan = clickTimerCurrent - clickTimerStart;
+
+                if (timeSpan.TotalSeconds > 0.3)
+                {
+                    Debug.Log("Deactivating clickActive in TacoManAnimatorControl.cs");
+                    clickActive = false;
+                    animator.SetBool(MOUSE_CLICKED, false);
+                    animator.SetBool(DOUBLECLICK, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    Debug.Log("Registered DoubleClick!");
+                    animator.SetBool(DOUBLECLICK, true);
+                }
             }
         }
+        
         
             
     }
