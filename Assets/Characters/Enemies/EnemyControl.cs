@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,20 +29,44 @@ public class EnemyControl : MonoBehaviour
     [SerializeField] private float gravityMultiplier = 0.001f;
 
     private bool inRange;
+    private bool currentlyMoving;
+
+
+    private bool attacking;
 
 
 
     private Vector3 moveDirection;
 
+
+
+
+
+
+    // measure time to limit how often the enemy can attack
+    private System.DateTime startAttack;
+    private System.DateTime now;
+
     private void Awake()
     {
         AlienController = GetComponent<CharacterController>();
+        inRange = false;
+        currentlyMoving = false;
+        attacking = false;
+
+
+        // set initial value of startAttack to avoid null reference error in checking attack animation
+        startAttack = DateTime.Now;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
         inRange = false;
+
+        // set initial value of startAttack to avoid null reference error in checking attack animation
+        startAttack = DateTime.Now;
     }
 
     // Update is called once per frame
@@ -59,7 +84,7 @@ public class EnemyControl : MonoBehaviour
         // if (!AlienController.isGrounded)
 
         // nuclear option: no longer trust Unity to give us accurate information
-        if (height > 5.2f)
+        if (height > 3.5f)
         {
             Debug.Log("Applying gravity!");
             ApplyGravity();
@@ -71,20 +96,66 @@ public class EnemyControl : MonoBehaviour
         AlienModel.transform.LookAt(PlayerModel.transform);
         // check if in range of player to attack
         CheckInRange();
+
+
+        attacking = false;
+
         if (!inRange)
         {
+            attacking = false;
+
             // Debug.Log("Not in range of player!");
             MoveToPlayer();
         }
         else
         {
             // Debug.Log("In range of player!");
+
+
+
+
+            // for use in animation control
+            currentlyMoving = false;
+
+            // when in range, attack the player
+            // issue command to the animation script to begin the attack animation
+
+            // only allow attacking every 3 seconds, starting at the start of the attack animation, adjust to make feel better.
+
+
+
+
+            now = DateTime.Now;
+
+            System.TimeSpan timeElapsed = now - startAttack;
+
+            Debug.Log("Time between attacks (timeElapsed) = " + timeElapsed.TotalSeconds);
+
+            if (timeElapsed.TotalSeconds > 3)
+            {
+                // startAttack = DateTime.Now;
+                attacking = true;
+                startAttack = DateTime.Now;
+            }
+            else
+            {
+                attacking = false;
+            }
+            
         }
         
     }
 
 
-
+    public bool IsAttacking()
+    {
+        return attacking;
+    
+    }
+    public bool IsMoving()
+    {
+        return currentlyMoving;
+    }
 
 
     private void MoveToPlayer()
@@ -92,9 +163,9 @@ public class EnemyControl : MonoBehaviour
 
 
         // moveDirection = PlayerModel.transform.position - AlienModel.transform.position;
+       
 
-
-
+        currentlyMoving = true;
         
         // move the enemy's position towards the player
         moveDirection = AlienModel.transform.forward * moveSpeed * Time.deltaTime;
