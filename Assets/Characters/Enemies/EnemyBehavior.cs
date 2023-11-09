@@ -5,9 +5,13 @@ using UnityEngine.AI;
 
 public class EnemyBehavior : MonoBehaviour
 {
+
+    [SerializeField] GameObject player;
+
+
     public NavMeshAgent agent;
 
-    public Transform player;
+    //public Transform player;
 
     public LayerMask whatIsGround, whatIsPlayer;
 
@@ -28,7 +32,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.Find("TacoManModel (Player(").transform;
+        // player = GameObject.Find("TacoManModel (Player)").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -75,7 +79,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private void ChasePlayer()
     {
-        agent.SetDestination(player.position);
+        agent.SetDestination(player.transform.position);
     }
 
     private void AttackPlayer()
@@ -83,7 +87,7 @@ public class EnemyBehavior : MonoBehaviour
         //Make sure enemy doesn't move
         agent.SetDestination(transform.position);
 
-        transform.LookAt(player);
+        transform.LookAt(player.transform);
 
         if (!alreadyAttacked)
         {

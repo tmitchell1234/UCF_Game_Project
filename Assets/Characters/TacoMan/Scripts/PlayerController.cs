@@ -114,13 +114,13 @@ public class PlayerController : MonoBehaviour
         // if player is spin attacking, activate the red hit circle
         if (stateInfo.IsName("SpinAttack"))
         {
-            Debug.Log("Activating red hit circle!");
-            redFullCircle.SetActive(true);
+            //Debug.Log("Activating red hit circle!");
+            //redFullCircle.SetActive(true);
         }
 
         else
         {
-            redFullCircle.SetActive(false);
+            //redFullCircle.SetActive(false);
         }
 
         
