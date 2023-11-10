@@ -12,6 +12,10 @@ public class AlienAnimationControl : MonoBehaviour
     private bool attacking;
     private bool isMoving;
 
+
+
+
+
     [SerializeField] EnemyControl enemyControlScript;
 
 

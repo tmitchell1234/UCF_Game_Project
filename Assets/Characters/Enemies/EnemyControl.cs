@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyControl : MonoBehaviour
@@ -9,43 +10,43 @@ public class EnemyControl : MonoBehaviour
     [SerializeField] GameObject PlayerModel;
     private CharacterController AlienController;
 
-    [SerializeField] GameObject CameraLookAt;
-
-
 
 
     // used only for debugging falling through the floor
     [SerializeField] GameObject ground;
 
 
-    [SerializeField] float moveSpeed;
+    // [SerializeField] float moveSpeed;
+    float moveSpeed = 11f;
 
-    [SerializeField] float attackDistance;
+    // [SerializeField] float attackDistance;
+    float attackDistance = 8f;
 
+
+
+    
 
 
     private float verticalVelocity = 0f;
     private float gravityValue = -9.81f;
-    [SerializeField] private float gravityMultiplier = 0.001f;
+    //[SerializeField] private float gravityMultiplier = 0.001f;
+    private float gravityMultiplier = 0.05f;
 
     private bool inRange;
     private bool currentlyMoving;
-
-
     private bool attacking;
-
-
 
     private Vector3 moveDirection;
 
 
 
 
-
-
     // measure time to limit how often the enemy can attack
-    private System.DateTime startAttack;
-    private System.DateTime now;
+    private DateTime startAttack;
+    private DateTime now;
+
+
+    
 
     private void Awake()
     {
@@ -58,6 +59,12 @@ public class EnemyControl : MonoBehaviour
         // set initial value of startAttack to avoid null reference error in checking attack animation
         startAttack = DateTime.Now;
 
+
+        AlienModel = this.gameObject;
+        PlayerModel = GameObject.Find("TacoManModel (PLAYER)");
+
+
+        ground = GameObject.Find("Ground");
     }
 
     // Start is called before the first frame update
@@ -72,12 +79,12 @@ public class EnemyControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Value of Alien.isGrounded = " + AlienController.isGrounded);
+        // Debug.Log("Value of Alien.isGrounded = " + AlienController.isGrounded);
 
 
         float height = AlienController.transform.position.y - ground.transform.position.y;
 
-        Debug.Log("Value of height is " + height);
+        // Debug.Log("Value of height is " + height);
 
         // apply gravity if not on ground
         // update: now applying gravity is controlled separately from horizontal movement
@@ -86,7 +93,7 @@ public class EnemyControl : MonoBehaviour
         // nuclear option: no longer trust Unity to give us accurate information
         if (height > 3.5f)
         {
-            Debug.Log("Applying gravity!");
+            // Debug.Log("Applying gravity!");
             ApplyGravity();
         }
 
@@ -111,9 +118,6 @@ public class EnemyControl : MonoBehaviour
         {
             // Debug.Log("In range of player!");
 
-
-
-
             // for use in animation control
             currentlyMoving = false;
 
@@ -121,15 +125,11 @@ public class EnemyControl : MonoBehaviour
             // issue command to the animation script to begin the attack animation
 
             // only allow attacking every 3 seconds, starting at the start of the attack animation, adjust to make feel better.
-
-
-
-
             now = DateTime.Now;
 
-            System.TimeSpan timeElapsed = now - startAttack;
+            TimeSpan timeElapsed = now - startAttack;
 
-            Debug.Log("Time between attacks (timeElapsed) = " + timeElapsed.TotalSeconds);
+            // Debug.Log("Time between attacks (timeElapsed) = " + timeElapsed.TotalSeconds);
 
             if (timeElapsed.TotalSeconds > 3)
             {
@@ -141,9 +141,7 @@ public class EnemyControl : MonoBehaviour
             {
                 attacking = false;
             }
-            
         }
-        
     }
 
 
