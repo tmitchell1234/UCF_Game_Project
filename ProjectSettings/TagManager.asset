@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - swordhitbox
+  - SwordHitbox
+  - SpinHitbox
+  - AlienHurtbox
   layers:
   - Default
   - TransparentFX

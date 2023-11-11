@@ -44,11 +44,11 @@ public class EnemySpawnSystem : MonoBehaviour
 
         double seconds = Math.Floor(timeSinceStart.TotalSeconds);
 
-        Debug.Log("Seconds = " + seconds);
+        // Debug.Log("Seconds = " + seconds);
 
         if (!alreadySpawned && seconds % 10 == 0)
         {
-            Debug.Log("Spawning enemies!");
+            // Debug.Log("Spawning enemies!");
             SpawnEnemies();
             alreadySpawned = true;
         }

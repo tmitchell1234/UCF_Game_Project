@@ -80,7 +80,7 @@ public class TacoManAnimatorControl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Hit space bar!");
+                // Debug.Log("Hit space bar!");
                 animator.SetBool(HIT_JUMP_KEY, true);
                 jumpActive = true;
                 spaceTimerStart = System.DateTime.Now;
@@ -93,7 +93,7 @@ public class TacoManAnimatorControl : MonoBehaviour
 
             if (timeSpan.TotalSeconds > 0.2)
             {
-                Debug.Log("Setting HitJumpKey to false!");
+                // Debug.Log("Setting HitJumpKey to false!");
                 jumpActive = false;
                 animator.SetBool(HIT_JUMP_KEY, false);
             }
@@ -140,7 +140,7 @@ public class TacoManAnimatorControl : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    Debug.Log("Clicked mouse!");
+                    // Debug.Log("Clicked mouse!");
 
 
                     animator.SetBool(MOUSE_CLICKED, true);
@@ -155,14 +155,14 @@ public class TacoManAnimatorControl : MonoBehaviour
 
                 if (timeSpan.TotalSeconds > 0.3)
                 {
-                    Debug.Log("Deactivating clickActive in TacoManAnimatorControl.cs");
+                   //  Debug.Log("Deactivating clickActive in TacoManAnimatorControl.cs");
                     clickActive = false;
                     animator.SetBool(MOUSE_CLICKED, false);
                     animator.SetBool(DOUBLECLICK, false);
                 }
                 else if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    Debug.Log("Registered DoubleClick!");
+                    // Debug.Log("Registered DoubleClick!");
                     animator.SetBool(DOUBLECLICK, true);
                 }
             }

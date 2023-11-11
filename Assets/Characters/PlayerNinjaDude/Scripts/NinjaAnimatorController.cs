@@ -21,6 +21,7 @@ public class NinjaAnimatorController : MonoBehaviour
     private const string HIT_JUMP_KEY = "HitJumpKey";
     private const string MOUSE_CLICKED = "MouseClicked";
     
+    
 
     private void Awake()
     {

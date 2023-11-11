@@ -42,15 +42,28 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Adjust how fast player model falls downward")]
     [SerializeField] private float gravityMultiplier;
 
+    private Vector3 moveDirection;
+    private Vector3 currentVelocity;
+
+    private bool isGrounded;
+
+
+
+
 
     private CharacterController characterController;
     [SerializeField] private GameInput gameInput;
 
 
 
-    private Vector3 moveDirection;
-    private Vector3 currentVelocity;
-    private bool isGrounded;
+    // hitboxes and hurtboxes
+
+    [Header("Hitboxes and hurtboxes")]
+    [Tooltip("The hitbox for regular sword slashes")]
+    [SerializeField] GameObject swordHitbox;
+    [Tooltip("The hitbox for spin attack")]
+    [SerializeField] GameObject spinHitbox;
+    
 
     private void Awake()
     {
@@ -76,7 +89,7 @@ public class PlayerController : MonoBehaviour
         // TODO: tweak how this works to get it to feel right
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Debug.Log("Activating red semicricle from PlayerController.cs mouse down!");
+            // Debug.Log("Activating red semicricle from PlayerController.cs mouse down!");
             redSemiCircle.SetActive(true);
         }
 
@@ -84,12 +97,17 @@ public class PlayerController : MonoBehaviour
 
 
         // stop player moving altogether if attacking (even if in midair):
-        if (!(stateInfo.IsName("SwordSlash1") || stateInfo.IsName("SwordSlash2")))
+        if (!(stateInfo.IsName("SwordSlash1") || stateInfo.IsName("SwordSlash2") || stateInfo.IsName("SpinAttack")))
         {
             // hide the red hitboxes if not attacking
             redSemiCircle.SetActive(false);
             redFullCircle.SetActive(false);
 
+            swordHitbox.SetActive(false);
+            spinHitbox.SetActive(false);
+
+
+            
             MovePlayer();
             if (!characterController.isGrounded) ApplyGravity();
         }
@@ -104,14 +122,45 @@ public class PlayerController : MonoBehaviour
 
             // TODO: Change this section to differentiate between normal attacks and spin attacks
 
+
+            // if regular sword slashing, activate the player's sword hitbox
+            if (stateInfo.IsName("SwordSlash1") || stateInfo.IsName("SwordSlash2"))
+            {
+                swordHitbox.SetActive(true);
+                redSemiCircle.SetActive(true);
+            }
+            // if spin attacking, activate the player's spin attack hitbox
+            else if (stateInfo.IsName("SpinAttack"))
+            {
+                // Debug.Log("Activating spin hitbox!");
+
+
+
+
+
+                // TODO: Deactivate, then reactivate the spin hit box when the player holds down mouse so enemies can be continuously hit
+
+                spinHitbox.SetActive(true);
+
+                // allow the player to continue to move while in spin attack animation
+                MovePlayer();
+                if (!characterController.isGrounded) ApplyGravity();
+            }
+            else
+            {
+                swordHitbox.SetActive(false);
+                spinHitbox.SetActive(false);
+            }
+
             // display the red circle hitboxes when attacking
-            redSemiCircle.SetActive(true);
+            // redSemiCircle.SetActive(true);
             //redFullCircle.SetActive(true);
         }
 
 
 
         // if player is spin attacking, activate the red hit circle
+        /*
         if (stateInfo.IsName("SpinAttack"))
         {
             //Debug.Log("Activating red hit circle!");
@@ -122,6 +171,7 @@ public class PlayerController : MonoBehaviour
         {
             //redFullCircle.SetActive(false);
         }
+        */
 
         
         //HandleJump();
@@ -191,6 +241,8 @@ public class PlayerController : MonoBehaviour
         // only do jump on key down
         if (!context.started) return;
 
+        Debug.Log("Jumping!");
+
 
         isGrounded = characterController.isGrounded;
 
@@ -205,7 +257,7 @@ public class PlayerController : MonoBehaviour
         verticalVelocity += jumpPower;
 
         hitJumpKey = true;
-        Debug.Log("Setting hitJumpKey to " + hitJumpKey);
+        // Debug.Log("Setting hitJumpKey to " + hitJumpKey);
     }
 
 
@@ -223,7 +275,7 @@ public class PlayerController : MonoBehaviour
 
     public bool HitJumpKey()
     {
-        if (hitJumpKey == true) Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
+        // if (hitJumpKey == true) Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
         // else Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
         return hitJumpKey;
     }
