@@ -49,7 +49,7 @@ public class EnemySpawnSystem : MonoBehaviour
         if (!alreadySpawned && seconds % 10 == 0)
         {
             // Debug.Log("Spawning enemies!");
-            SpawnEnemies();
+            // SpawnEnemies();
             alreadySpawned = true;
         }
         // prevent the script from resetting alreadyspawned after the first call to spawn

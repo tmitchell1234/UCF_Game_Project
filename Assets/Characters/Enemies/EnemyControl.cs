@@ -19,6 +19,8 @@ public class EnemyControl : MonoBehaviour
     [SerializeField] GameObject PlayerModel;
     private CharacterController AlienController;
 
+    [SerializeField] PlayerController playerScript;
+
     Animator AlienAnimator;
 
 
@@ -31,7 +33,7 @@ public class EnemyControl : MonoBehaviour
     float moveSpeed = 11f;
 
     // [SerializeField] float attackDistance;
-    float attackDistance = 8f;
+    float attackDistance = 6f;
 
 
 
@@ -54,6 +56,7 @@ public class EnemyControl : MonoBehaviour
 
     // manage hitboxes and hurtboxes
     GameObject hurtBox;
+    GameObject slapBox;
 
     private bool isHit;
 
@@ -112,6 +115,11 @@ public class EnemyControl : MonoBehaviour
 
         // this might work? can only get child object by index, not by tag or name.
         hurtBox = AlienModel.transform.GetChild(2).gameObject;
+
+        slapBox = AlienModel.transform.GetChild(4).gameObject;
+
+        if (slapBox.tag == "AlienSlapbox")
+            Debug.Log("Successfully got alien slap box!");
 
 
         // max health set to 100
@@ -200,6 +208,22 @@ public class EnemyControl : MonoBehaviour
             return;
         }
 
+        // activate the hit box when attacking
+        if (enemyAnimationState.IsName("Melee Hit"))
+        {
+            slapBox.SetActive(true);
+
+            // reset position of hitbox (since it keeps flying away for some reason...)
+            slapBox.transform.position = AlienModel.transform.position;
+            slapBox.transform.position = new Vector3(slapBox.transform.position.x, slapBox.transform.position.y, slapBox.transform.position.z);
+            slapBox.transform.rotation = AlienModel.transform.rotation;
+            // slapBox.transform.eulerAngles = new Vector3(90, 0, 0);
+
+        }
+        else
+        {
+            slapBox.SetActive(false);
+        }
 
 
 
@@ -212,7 +236,7 @@ public class EnemyControl : MonoBehaviour
         // if (!AlienController.isGrounded)
 
         // nuclear option: no longer trust Unity to give us accurate information
-        if (height > 3.5f)
+        if (height > 2f)
         {
             // Debug.Log("Applying gravity!");
             ApplyGravity();
@@ -222,6 +246,11 @@ public class EnemyControl : MonoBehaviour
 
         // face the player
         AlienModel.transform.LookAt(PlayerModel.transform);
+
+        // fix the model's vertical rotation
+        AlienModel.transform.eulerAngles = new Vector3(0f, AlienModel.transform.eulerAngles.y, AlienModel.transform.eulerAngles.z);
+
+
         // check if in range of player to attack
         CheckInRange();
 
@@ -275,7 +304,7 @@ public class EnemyControl : MonoBehaviour
 
     public void Damage(float damageAmount)
     {
-        healthSystem.Damage(damageAmount);
+        healthSystem.Damage(damageAmount); 
 
     }
 
@@ -301,19 +330,24 @@ public class EnemyControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collider)
     {
-        Debug.Log("Registered collision on enemy!");
+        // Debug.Log("Registered collision on enemy!");
         if (collider.gameObject.tag == "SwordHitbox")
         {
-            Debug.Log("Enemy hit by SwordHitbox!");
+            // Debug.Log("Enemy hit by SwordHitbox!");
             isHit = true;
             Damage(40);
+
+            // heal the player when they deal damage
+            playerScript.Heal(10);
         }
 
         if (collider.gameObject.tag == "SpinHitbox")
         {
-            Debug.Log("Enemy hit by SpinHitbox!");
+            // Debug.Log("Enemy hit by SpinHitbox!");
             isHit = true;
             Damage(25);
+
+            playerScript.Heal(5);
         }
 
 

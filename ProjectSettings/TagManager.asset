@@ -8,6 +8,11 @@ TagManager:
   - SwordHitbox
   - SpinHitbox
   - AlienHurtbox
+  - DashHitbox
+  - BossHurtbox
+  - SlashHitbox
+  - SlamHitbox
+  - AlienSlapbox
   layers:
   - Default
   - TransparentFX

@@ -23,6 +23,7 @@ public class TacoManAnimatorControl : MonoBehaviour
     private const string DOUBLECLICK = "DoubleClicked";
     private const string HOLDINGT = "HoldingT";
     private const string HOLDINGCLICK = "HoldingClick";
+    private const string HITSHIFT = "HitShift";
 
 
 
@@ -59,8 +60,24 @@ public class TacoManAnimatorControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // if dash attacking, handle this first thing to make the animations and controls feel more responsive
+        bool isDashing = playerControllerScript.IsDashing();
+
+        if (isDashing)
+        {
+            animator.SetBool(HITSHIFT, true);
+        }
+        else
+        {
+            animator.SetBool(HITSHIFT, false);
+        }
+
+
+
         clickTimerCurrent = System.DateTime.Now;
         spaceTimerCurrent = System.DateTime.Now;
+
+        
 
 
         animator.SetBool(IS_MOVING, playerControllerScript.IsMoving());

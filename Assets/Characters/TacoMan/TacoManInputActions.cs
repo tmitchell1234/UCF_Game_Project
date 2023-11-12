@@ -53,6 +53,15 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""8e912703-9fbb-41a5-91bd-40923d40300c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f44f2f5b-7f98-4546-bc18-13deefaaf467"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +163,7 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
         m_TacoMan_Move = m_TacoMan.FindAction("Move", throwIfNotFound: true);
         m_TacoMan_Jump = m_TacoMan.FindAction("Jump", throwIfNotFound: true);
         m_TacoMan_Attack = m_TacoMan.FindAction("Attack", throwIfNotFound: true);
+        m_TacoMan_Dash = m_TacoMan.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +228,7 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_TacoMan_Move;
     private readonly InputAction m_TacoMan_Jump;
     private readonly InputAction m_TacoMan_Attack;
+    private readonly InputAction m_TacoMan_Dash;
     public struct TacoManActions
     {
         private @TacoManInputActions m_Wrapper;
@@ -214,6 +236,7 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_TacoMan_Move;
         public InputAction @Jump => m_Wrapper.m_TacoMan_Jump;
         public InputAction @Attack => m_Wrapper.m_TacoMan_Attack;
+        public InputAction @Dash => m_Wrapper.m_TacoMan_Dash;
         public InputActionMap Get() { return m_Wrapper.m_TacoMan; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -232,6 +255,9 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(ITacoManActions instance)
@@ -245,6 +271,9 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(ITacoManActions instance)
@@ -267,5 +296,6 @@ public partial class @TacoManInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

@@ -1,3 +1,4 @@
+using CodeMonkey.HealthSystemCM;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,6 +56,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameInput gameInput;
 
 
+    
+
+
 
     // hitboxes and hurtboxes
 
@@ -63,19 +67,51 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject swordHitbox;
     [Tooltip("The hitbox for spin attack")]
     [SerializeField] GameObject spinHitbox;
-    
+
+    // set dashing status for the animator
+    private bool isDashing;
+
+    [Tooltip("The hitbox for dash attack")]
+    [SerializeField] GameObject dashHitbox;
+
+
+
+
+
+
+    // Player health system (CodeMonkey module)
+    HealthSystem playerHealthSystem;
+    private bool isDead;
+
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         playerAnimator = playerObjReference.GetComponent<Animator>();
+
+        // give player 100 health, adjust damage accordingly
+        playerHealthSystem = new HealthSystem(100);
+        playerHealthSystem.OnDead += PlayerHealthSystem_OnDead;
     }
+
+
+
+
+    private void PlayerHealthSystem_OnDead(object sender, System.EventArgs e)
+    {
+        // TODO: Implement how to handle player death here
+        Debug.Log("PLAYER DIED!");
+        isDead = true;
+    }
+
+
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        isDashing = false;
     }
 
     // Update is called once per frame
@@ -83,6 +119,19 @@ public class PlayerController : MonoBehaviour
     {
         // update and check the current animation state
         AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+
+
+
+        // if the player is dash attacking, don't do anything else until the animation is over
+        if (stateInfo.IsName("DashAttack")) return;
+
+        else
+        {
+            // when the dash attack is over, turn off the hitbox
+            dashHitbox.SetActive(false);
+            isDashing = false;
+        }
+        
 
 
         // activate red hitboxes immediately on mouse down to improve responsiveness
@@ -110,34 +159,30 @@ public class PlayerController : MonoBehaviour
             
             MovePlayer();
             if (!characterController.isGrounded) ApplyGravity();
+            
         }
 
-        // if the player is attacking, reset all vertical velocity to 0
-        // this lets the player hover in midair when attacking
+        
         else
         {
-            verticalVelocity = 0f;
-
-
-
             // TODO: Change this section to differentiate between normal attacks and spin attacks
 
 
             // if regular sword slashing, activate the player's sword hitbox
             if (stateInfo.IsName("SwordSlash1") || stateInfo.IsName("SwordSlash2"))
             {
+                // if the player is attacking, reset all vertical velocity to 0
+                // this lets the player hover in midair when attacking
+
+                // only apply when sword slashing, we want to let the player jump and move around when spin attacking
+                verticalVelocity = 0f;
+
                 swordHitbox.SetActive(true);
                 redSemiCircle.SetActive(true);
             }
             // if spin attacking, activate the player's spin attack hitbox
             else if (stateInfo.IsName("SpinAttack"))
             {
-                // Debug.Log("Activating spin hitbox!");
-
-
-
-
-
                 // TODO: Deactivate, then reactivate the spin hit box when the player holds down mouse so enemies can be continuously hit
 
                 spinHitbox.SetActive(true);
@@ -227,12 +272,99 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            
             verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
+
             if (!(verticalVelocity > 25f)) { }
                 // verticalVelocity += gravityValue * gravityMultiplier * Time.deltaTime;
         }
     }
+
+
+
+
+    // deal damage to Taco Man when hit
+    private void OnCollisionEnter(Collision collider)
+    {
+        Debug.Log("Player hit by: " + collider.gameObject.tag);
+
+        // if hit by alien slap, take 10 damage
+        if (collider.gameObject.tag == "AlienSlapbox")
+        {
+            Debug.Log("10 damage from AlienSlapbox");
+            playerHealthSystem.Damage(10);
+        }
+        
+        // take 25 damage from boss slash
+        if (collider.gameObject.tag == "SlashHitbox")
+        {
+            Debug.Log("Taking 25 damage from SlashHitbox");
+            playerHealthSystem.Damage(25);
+        }
+
+        // take 35 damage from boss slam
+        if (collider.gameObject.tag == "SlamHitbox")
+        {
+            Debug.Log("35 damage from SlamHitbox");
+            playerHealthSystem.Damage(35);
+        }
+    }
+
+    public void Heal(float healAmount)
+    {
+        Debug.Log("Healing player for " + healAmount);
+        playerHealthSystem.Heal(healAmount);
+    }
+
+
+
+
+    public bool IsDashing()
+    {
+        return isDashing;
+    }
+    public void HandleDashAttack(InputAction.CallbackContext context)
+    {
+        if (!context.started) return;
+
+        Debug.Log("Hit shift!");
+
+        isDashing = true;
+
+        // activate the dashing hitboxes
+        dashHitbox.SetActive(true);
+
+        // reset the player's vertical velocity
+        verticalVelocity = 0f;
+
+        // teleport the player forward, in the direction the camera is facing
+        Vector3 cameraPosition = camera.position;
+
+        float distance = 15f;
+
+        Vector3 destination = cameraPosition - playerObjReference.transform.position;
+        // destination *= distance;
+
+
+        // determine if the camera is being pointed upward or downward
+        float pitchAngle = camera.transform.eulerAngles.x;
+
+        Debug.Log("pitchangle = " + pitchAngle);
+
+        // flip the sign of x and z values (but not y value) to correct the orientation
+        destination.x *= -distance;
+        destination.z *= -distance;
+
+
+        // can't quite get the Y position to work well... for now, just keep the player on the same level vertically
+        destination.y = playerObjReference.transform.position.y;
+
+        Debug.Log("destination = " + destination);
+        transform.position += destination;
+
+        Debug.Log("Player new position = " + transform.position);
+        
+    }
+
 
 
     // called from PlayerInput object in scene objects hierarchy, under GAME > InputManagers
