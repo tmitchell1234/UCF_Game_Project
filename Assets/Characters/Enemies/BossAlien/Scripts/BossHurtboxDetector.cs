@@ -27,6 +27,15 @@ public class BossHurtboxDetector : MonoBehaviour
             playerScript.Heal(10);
             
         }
+
+        else if (collider.gameObject.tag == "SwordHitbox2")
+        {
+            Debug.Log("Boss hit by SwordHitbox2, dealing 60 damage!");
+
+            bossScript.Damage(60);
+
+            playerScript.Heal(25);
+        }
         else if (collider.gameObject.tag == "SpinHitbox")
         {
             Debug.Log("Boss hit by SpinHitbox, dealing 20 damage!");

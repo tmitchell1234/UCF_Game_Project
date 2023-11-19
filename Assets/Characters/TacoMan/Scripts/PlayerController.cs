@@ -1,11 +1,12 @@
 using CodeMonkey.HealthSystemCM;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IGetHealthSystem
 {
     // This controller is specifically for Taco Man!
 
@@ -65,8 +66,12 @@ public class PlayerController : MonoBehaviour
     [Header("Hitboxes and hurtboxes")]
     [Tooltip("The hitbox for regular sword slashes")]
     [SerializeField] GameObject swordHitbox;
+    [SerializeField] GameObject swordHitbox2;
     [Tooltip("The hitbox for spin attack")]
     [SerializeField] GameObject spinHitbox;
+
+    private float lastSpinActivationTime;
+    private float activationInterval = 0.5f;
 
     // set dashing status for the animator
     private bool isDashing;
@@ -76,7 +81,13 @@ public class PlayerController : MonoBehaviour
 
 
 
+    [Header("Sound effect script")]
+    [SerializeField] ParkLevelSoundManager soundScript;
+    private bool alreadyPlayedSwordSwing = false;
 
+
+    [Header("Enemy spawner")]
+    [SerializeField] GameObject enemySpawner;
 
 
     // Player health system (CodeMonkey module)
@@ -90,7 +101,7 @@ public class PlayerController : MonoBehaviour
         playerAnimator = playerObjReference.GetComponent<Animator>();
 
         // give player 100 health, adjust damage accordingly
-        playerHealthSystem = new HealthSystem(100);
+        playerHealthSystem = new HealthSystem(120);
         playerHealthSystem.OnDead += PlayerHealthSystem_OnDead;
     }
 
@@ -102,6 +113,9 @@ public class PlayerController : MonoBehaviour
         // TODO: Implement how to handle player death here
         Debug.Log("PLAYER DIED!");
         isDead = true;
+
+        // disable enemy spawner when dead so it doesn't keep spawning more in the death screen
+        enemySpawner.SetActive(false);
     }
 
 
@@ -112,11 +126,20 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         isDashing = false;
+
+        lastSpinActivationTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+        {
+            // don't do anything!
+            return;
+        }
+
+
         // update and check the current animation state
         AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
 
@@ -140,6 +163,11 @@ public class PlayerController : MonoBehaviour
         {
             // Debug.Log("Activating red semicricle from PlayerController.cs mouse down!");
             redSemiCircle.SetActive(true);
+
+
+
+            // TODO: Fix this if needed. Play the sword slash sound when mouse clicked:
+            // soundScript.PlaySwordSwing();
         }
 
 
@@ -152,8 +180,10 @@ public class PlayerController : MonoBehaviour
             redSemiCircle.SetActive(false);
             redFullCircle.SetActive(false);
 
-            swordHitbox.SetActive(false);
+            // swordHitbox.SetActive(false);
             spinHitbox.SetActive(false);
+
+            // alreadyPlayedSwordSwing = false;
 
 
             
@@ -177,24 +207,62 @@ public class PlayerController : MonoBehaviour
                 // only apply when sword slashing, we want to let the player jump and move around when spin attacking
                 verticalVelocity = 0f;
 
-                swordHitbox.SetActive(true);
+                //swordHitbox.SetActive(true);
                 redSemiCircle.SetActive(true);
+
+                /*
+                if (!alreadyPlayedSwordSwing)
+                {
+                    soundScript.PlaySwordSwing();
+                    alreadyPlayedSwordSwing = true;
+                }
+                */
             }
             // if spin attacking, activate the player's spin attack hitbox
             else if (stateInfo.IsName("SpinAttack"))
             {
                 // TODO: Deactivate, then reactivate the spin hit box when the player holds down mouse so enemies can be continuously hit
 
-                spinHitbox.SetActive(true);
+                //spinHitbox.SetActive(true);
 
                 // allow the player to continue to move while in spin attack animation
                 MovePlayer();
                 if (!characterController.isGrounded) ApplyGravity();
+
+                // activate the spin hitbox on seconds divisible by 0.5 (allows player to repeatedly spin attack hit while standing in place)
+                if (Time.time - lastSpinActivationTime >= activationInterval)
+                {
+                    // spinHitbox.SetActive(!spinHitbox.activeSelf);
+                    lastSpinActivationTime = Time.time;
+                }
+                /*
+                else
+                {
+                    spinHitbox.SetActive(false);
+                }
+                */
+
+
+
+                /*
+                DateTime now = DateTime.Now;
+
+                if (now.Second % 0.5 == 0)
+                {
+                    spinHitbox.SetActive(true);
+                }
+                else
+                {
+                    spinHitbox.SetActive(false);
+                }
+                */
+
+
             }
             else
             {
-                swordHitbox.SetActive(false);
-                spinHitbox.SetActive(false);
+                // swordHitbox.SetActive(false);
+                //spinHitbox.SetActive(false);
             }
 
             // display the red circle hitboxes when attacking
@@ -203,23 +271,65 @@ public class PlayerController : MonoBehaviour
         }
 
 
+    }
 
-        // if player is spin attacking, activate the red hit circle
-        /*
-        if (stateInfo.IsName("SpinAttack"))
-        {
-            //Debug.Log("Activating red hit circle!");
-            //redFullCircle.SetActive(true);
-        }
+    public bool IsDead()
+    {
+        return isDead;
+    }
 
-        else
-        {
-            //redFullCircle.SetActive(false);
-        }
-        */
+    public void ActivateFirstHitbox()
+    {
+        swordHitbox.SetActive(true);
+    }
 
-        
-        //HandleJump();
+    public void DeactivateFirstHitbox()
+    {
+        swordHitbox.SetActive(false);
+    }
+
+    public void ActivateSecondHitbox()
+    {
+        swordHitbox2.SetActive(true);
+    }
+
+    public void DeactivateSecondHitbox()
+    {
+        swordHitbox2.SetActive(false);
+    }
+
+    public void ActivateSpinHitbox()
+    {
+        spinHitbox.SetActive(true);
+    }
+
+    public void DeactivateSpinHitbox()
+    {
+        spinHitbox.SetActive(false);
+    }
+
+
+
+
+
+    public void PlaySwordSwingSound()
+    {
+        soundScript.PlaySwordSwing();
+    }
+
+    public void PlaySwordSpinSound()
+    {
+        soundScript.PlaySwordSpin();
+    }
+
+    public void PlayDashSound()
+    {
+        soundScript.PlayDashSound();
+    }
+
+    public void PlayJumpSound()
+    {
+        soundScript.PlayJumpSound();
     }
 
     public void MovePlayer()
@@ -285,7 +395,7 @@ public class PlayerController : MonoBehaviour
     // deal damage to Taco Man when hit
     private void OnCollisionEnter(Collision collider)
     {
-        Debug.Log("Player hit by: " + collider.gameObject.tag);
+        // Debug.Log("Player hit by: " + collider.gameObject.tag);
 
         // if hit by alien slap, take 10 damage
         if (collider.gameObject.tag == "AlienSlapbox")
@@ -307,7 +417,20 @@ public class PlayerController : MonoBehaviour
             Debug.Log("35 damage from SlamHitbox");
             playerHealthSystem.Damage(35);
         }
+
+        if (collider.gameObject.tag == "BearSwipe")
+        {
+            Debug.Log("Hit by SwipeHitbox, 45 damage");
+            playerHealthSystem.Damage(45);
+        }
+
+        if (collider.gameObject.tag == "BearSlam")
+        {
+            Debug.Log("Hit by BearSlam, 35 damage");
+            playerHealthSystem.Damage(35);
+        }
     }
+
 
     public void Heal(float healAmount)
     {
@@ -410,5 +533,11 @@ public class PlayerController : MonoBehaviour
         // if (hitJumpKey == true) Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
         // else Debug.Log("Inside HitJumpKey(), returning " + hitJumpKey);
         return hitJumpKey;
+    }
+
+
+    public HealthSystem GetHealthSystem()
+    {
+        return playerHealthSystem;
     }
 }

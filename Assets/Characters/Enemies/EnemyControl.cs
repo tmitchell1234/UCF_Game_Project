@@ -13,7 +13,7 @@ using CodeMonkey.HealthSystemCM;
 using System.Runtime.CompilerServices;
 using UnityEngine.Experimental.GlobalIllumination;
 
-public class EnemyControl : MonoBehaviour
+public class EnemyControl : MonoBehaviour, IGetHealthSystem
 {
     [SerializeField] GameObject AlienModel;
     [SerializeField] GameObject PlayerModel;
@@ -22,6 +22,12 @@ public class EnemyControl : MonoBehaviour
     [SerializeField] PlayerController playerScript;
 
     Animator AlienAnimator;
+
+
+    // sound script for sound effects
+    ParkLevelSoundManager soundScript;
+    private bool alreadyPlayedExplosion = false;
+
 
 
 
@@ -107,6 +113,9 @@ public class EnemyControl : MonoBehaviour
 
         AlienModel = this.gameObject;
         PlayerModel = GameObject.Find("TacoManModel (PLAYER)");
+        playerScript = PlayerModel.GetComponent<PlayerController>();
+
+        soundScript = GameObject.Find("SoundManager").GetComponent<ParkLevelSoundManager>();
 
 
         ground = GameObject.Find("Ground");
@@ -119,7 +128,7 @@ public class EnemyControl : MonoBehaviour
         slapBox = AlienModel.transform.GetChild(4).gameObject;
 
         if (slapBox.tag == "AlienSlapbox")
-            Debug.Log("Successfully got alien slap box!");
+            // Debug.Log("Successfully got alien slap box!");
 
 
         // max health set to 100
@@ -183,6 +192,14 @@ public class EnemyControl : MonoBehaviour
                 
                 explosionEffect.Play();
                 explosionRing.Play();
+
+                // play explosion sound effect (ONLY ONCE)
+                if (!alreadyPlayedExplosion)
+                {
+                    PlayExplosionSound();
+                    alreadyPlayedExplosion = true;
+                }
+
                 
             }
 
@@ -211,12 +228,18 @@ public class EnemyControl : MonoBehaviour
         // activate the hit box when attacking
         if (enemyAnimationState.IsName("Melee Hit"))
         {
-            slapBox.SetActive(true);
+            DateTime current = DateTime.Now;
+
+            TimeSpan timeSinceAnimationStart = current - startAttack;
+
+            // activate the slap hitbox after the animation has played for 0.8 seconds
+            if (timeSinceAnimationStart.TotalSeconds > 0.8)
+                slapBox.SetActive(true);
 
             // reset position of hitbox (since it keeps flying away for some reason...)
-            slapBox.transform.position = AlienModel.transform.position;
-            slapBox.transform.position = new Vector3(slapBox.transform.position.x, slapBox.transform.position.y, slapBox.transform.position.z);
-            slapBox.transform.rotation = AlienModel.transform.rotation;
+            // slapBox.transform.position = AlienModel.transform.position;
+            // slapBox.transform.position = new Vector3(slapBox.transform.position.x, slapBox.transform.position.y, slapBox.transform.position.z);
+            // slapBox.transform.rotation = AlienModel.transform.rotation;
             // slapBox.transform.eulerAngles = new Vector3(90, 0, 0);
 
         }
@@ -229,14 +252,12 @@ public class EnemyControl : MonoBehaviour
 
         float height = AlienController.transform.position.y - ground.transform.position.y;
 
-        // Debug.Log("Value of height is " + height);
-
         // apply gravity if not on ground
         // update: now applying gravity is controlled separately from horizontal movement
         // if (!AlienController.isGrounded)
 
         // nuclear option: no longer trust Unity to give us accurate information
-        if (height > 2f)
+        if (height > 0.5f)
         {
             // Debug.Log("Applying gravity!");
             ApplyGravity();
@@ -286,6 +307,9 @@ public class EnemyControl : MonoBehaviour
                 // startAttack = DateTime.Now;
                 attacking = true;
                 startAttack = DateTime.Now;
+
+
+                // start timer to activate the slap hitbox at appropriate times
             }
             else
             {
@@ -294,6 +318,15 @@ public class EnemyControl : MonoBehaviour
         }
     }
 
+    public void PlaySlapSound()
+    {
+        soundScript.PlayAlienSlapSound();
+    }
+
+    public void PlayExplosionSound()
+    {
+        soundScript.PlayExplosionSound();
+    }
 
     public bool IsDead()
     {
@@ -322,8 +355,8 @@ public class EnemyControl : MonoBehaviour
 
         backwardsDirection.y = 0;
 
-        // set move speed of fly backwards to 7
-        backwardsDirection = backwardsDirection * 0.5f * Time.deltaTime;
+        // set move speed of fly backwards to 1.1
+        backwardsDirection = backwardsDirection * 1.1f * Time.deltaTime;
     }
 
 
@@ -335,35 +368,27 @@ public class EnemyControl : MonoBehaviour
         {
             // Debug.Log("Enemy hit by SwordHitbox!");
             isHit = true;
-            Damage(40);
+            Damage(35);
 
             // heal the player when they deal damage
-            playerScript.Heal(10);
+            playerScript.Heal(5);
         }
 
+        if (collider.gameObject.tag == "SwordHitbox2")
+        {
+            isHit = true;
+            Damage(65);
+
+            playerScript.Heal(15);
+        }
         if (collider.gameObject.tag == "SpinHitbox")
         {
             // Debug.Log("Enemy hit by SpinHitbox!");
             isHit = true;
-            Damage(25);
+            Damage(15);
 
-            playerScript.Heal(5);
+            playerScript.Heal(1);
         }
-
-
-        /*
-        if (collider.collider.CompareTag("SwordHitbox"))
-        {
-            Debug.Log("Enemy hit by SwordHitbox!");
-            isHit = true;
-        }
-
-        if (collider.collider.CompareTag("SpinHitbox"))
-        {
-            Debug.Log("Enemy hit by SpinHitbox!");
-            isHit = true;
-        }
-        */
     }
 
     public bool IsHit()
@@ -389,11 +414,6 @@ public class EnemyControl : MonoBehaviour
 
     private void MoveToPlayer()
     {
-
-
-        // moveDirection = PlayerModel.transform.position - AlienModel.transform.position;
-       
-
         currentlyMoving = true;
         
         // move the enemy's position towards the player
@@ -436,5 +456,10 @@ public class EnemyControl : MonoBehaviour
             AlienModel.transform.position += down;
         }
 
+    }
+
+    public HealthSystem GetHealthSystem()
+    {
+        return healthSystem;
     }
 }

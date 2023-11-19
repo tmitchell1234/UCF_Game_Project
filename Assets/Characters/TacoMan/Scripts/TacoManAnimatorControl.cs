@@ -119,6 +119,7 @@ public class TacoManAnimatorControl : MonoBehaviour
 
 
         // check for spin attack input first, then check for a mouse click
+        /*
         if (Input.GetKey(KeyCode.T))
         {
             holdingT = true;
@@ -131,6 +132,16 @@ public class TacoManAnimatorControl : MonoBehaviour
                 animator.SetBool(HOLDINGCLICK, true);
             }
         }
+        */
+
+        // change this. spin attack is right click
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            holdingT = true;
+            holdingClick = true;
+            animator.SetBool(HOLDINGT, true);
+            animator.SetBool(HOLDINGCLICK, true);
+        }
 
         // else if the player is not holding down T, play the regular attack animation
 
@@ -139,7 +150,7 @@ public class TacoManAnimatorControl : MonoBehaviour
             // allow player to keep spin attacking if T is let go of but mouse is still held down
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("SpinAttack"))
             {
-                if (Input.GetKey(KeyCode.Mouse0))
+                if (Input.GetKey(KeyCode.Mouse1))
                     return;
             }
 

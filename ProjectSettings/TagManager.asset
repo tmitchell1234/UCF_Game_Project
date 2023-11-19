@@ -13,6 +13,11 @@ TagManager:
   - SlashHitbox
   - SlamHitbox
   - AlienSlapbox
+  - BossTrigger
+  - BearSwipe
+  - BearSlam
+  - LazerShot
+  - SwordHitbox2
   layers:
   - Default
   - TransparentFX

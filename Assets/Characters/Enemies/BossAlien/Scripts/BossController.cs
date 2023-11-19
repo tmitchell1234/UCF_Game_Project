@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BossBehavior : MonoBehaviour
+public class BossBehavior : MonoBehaviour, IGetHealthSystem
 {
     [Header("Movement control variables")]
     [SerializeField] float moveSpeed;
@@ -27,14 +27,23 @@ public class BossBehavior : MonoBehaviour
     [SerializeField] GameObject BossModel;
     [SerializeField] GameObject PlayerModel;
     [SerializeField] BossAnimationController BossAnimationScript;
-
     Animator bossAnimator;
+
+    [Header("Explosion effect")]
+    [SerializeField] GameObject explosionEffectObject;
+    [SerializeField] ParticleSystem explosionEffect;
+    [SerializeField] GameObject explosionRingObject;
+    [SerializeField] ParticleSystem explosionRing;
+    [SerializeField] GameObject explosionLightObject;
 
     [Header("Set movement points")]
     [SerializeField] GameObject point1;
     [SerializeField] GameObject point2;
     [SerializeField] GameObject point3;
     [SerializeField] GameObject point4;
+
+    [Header("Sound effect script")]
+    [SerializeField] ParkLevelSoundManager soundScript;
 
     // only visible in this class, for internal management only
     GameObject chosenTarget;
@@ -86,8 +95,8 @@ public class BossBehavior : MonoBehaviour
         bossCharacterController = GetComponent<CharacterController>();
         isDead = false;
 
-        // initialize to 1000 health for now
-        bossHealthSystem = new HealthSystem(1000);
+        // initialize to 1250 health
+        bossHealthSystem = new HealthSystem(1250);
         bossHealthSystem.OnDead += BossHealthSystem_OnDead;
 
         bossState = START;
@@ -275,6 +284,59 @@ public class BossBehavior : MonoBehaviour
 
     }
 
+    public void Explode()
+    {
+        explosionEffectObject.SetActive(true);
+        explosionRingObject.SetActive(true);
+        explosionLightObject.SetActive(true);
+
+        explosionEffect.Play();
+        explosionRing.Play();
+        soundScript.PlayExplosionSound();
+    }
+
+    public void DeactivateExplosion()
+    {
+        explosionEffectObject.SetActive(false);
+        explosionRingObject.SetActive(false);
+        explosionLightObject.SetActive(false);
+    }
+    public void ActivateSlashHitbox()
+    {
+        BossHitboxSlash.SetActive(true);
+    }
+
+    public void DeactivateSlashHitbox()
+    {
+        BossHitboxSlash.SetActive(false);
+    }
+
+    public void ActivateSlamHitbox()
+    {
+        BossHitboxSlam.SetActive(true);
+    }
+
+    public void DeactivateSlamHitbox()
+    {
+        BossHitboxSlam.SetActive(false);
+    }
+
+    public void PlayFootsteps()
+    {
+        soundScript.PlayThunderingFootsteps();
+    }
+
+    public void PlayRoar()
+    {
+        soundScript.PlayBossRoar();
+    }
+
+    public void PlaySlash()
+    {
+        soundScript.PlayBossSlash();
+    }
+
+
 
     private void OnCollisionEnter(Collision collider)
     {
@@ -313,6 +375,8 @@ public class BossBehavior : MonoBehaviour
         BossModel.transform.position += moveDirection;
     }
 
+
+    // TODO: Delete these methods. Found a better way of doing these in the animation events system.
     void Slash()
     {
         
@@ -321,11 +385,11 @@ public class BossBehavior : MonoBehaviour
 
         if (slashTimespan.TotalSeconds < 2.5)
         {
-            BossHitboxSlash.SetActive(true);
+            // BossHitboxSlash.SetActive(true);
         }
         else
         {
-            BossHitboxSlash.SetActive(false);
+            // BossHitboxSlash.SetActive(false);
         }
     }
 
@@ -336,11 +400,11 @@ public class BossBehavior : MonoBehaviour
 
         if (slamtimespan.TotalSeconds > 2 && slamtimespan.TotalSeconds < 4)
         {
-            BossHitboxSlam.SetActive(true);
+            // BossHitboxSlam.SetActive(true);
         }
         else
         {
-            BossHitboxSlam.SetActive(false);
+            // BossHitboxSlam.SetActive(false);
         }
     }
 
@@ -352,7 +416,7 @@ public class BossBehavior : MonoBehaviour
 
         Debug.Log("Boss is dead!");
 
-        // TODO: Implement big death explosion
+        soundScript.StopAlienBossMusic();
     }
 
     public void Damage(float damageAmount)
@@ -395,5 +459,10 @@ public class BossBehavior : MonoBehaviour
         isDead = false;
     }
 
+
+    public HealthSystem GetHealthSystem()
+    {
+        return bossHealthSystem;
+    }
     
 }
