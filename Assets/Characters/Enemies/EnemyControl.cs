@@ -26,11 +26,11 @@ public class EnemyControl : MonoBehaviour
 
 
     // used only for debugging falling through the floor
-    [SerializeField] GameObject ground;
+    //[SerializeField] GameObject ground;
 
 
     // [SerializeField] float moveSpeed;
-    float moveSpeed = 11f;
+    float moveSpeed = 14f;
 
     // [SerializeField] float attackDistance;
     float attackDistance = 6f;
@@ -41,9 +41,9 @@ public class EnemyControl : MonoBehaviour
 
 
     private float verticalVelocity = 0f;
-    private float gravityValue = -9.81f;
+    //private float gravityValue = -9.81f;
     //[SerializeField] private float gravityMultiplier = 0.001f;
-    private float gravityMultiplier = 0.05f;
+    //private float gravityMultiplier = 0.05f;
 
     private bool inRange;
     private bool currentlyMoving;
@@ -109,7 +109,7 @@ public class EnemyControl : MonoBehaviour
         PlayerModel = GameObject.Find("TacoManModel (PLAYER)");
 
 
-        ground = GameObject.Find("Ground");
+        //ground = GameObject.Find("Ground");
 
 
 
@@ -227,7 +227,7 @@ public class EnemyControl : MonoBehaviour
 
 
 
-        float height = AlienController.transform.position.y - ground.transform.position.y;
+        //float height = AlienController.transform.position.y - ground.transform.position.y;
 
         // Debug.Log("Value of height is " + height);
 
@@ -236,11 +236,11 @@ public class EnemyControl : MonoBehaviour
         // if (!AlienController.isGrounded)
 
         // nuclear option: no longer trust Unity to give us accurate information
-        if (height > 2f)
-        {
+        //if (height > 2f)
+        //{
             // Debug.Log("Applying gravity!");
-            ApplyGravity();
-        }
+          //  ApplyGravity();
+        //}
 
 
 
@@ -421,7 +421,7 @@ public class EnemyControl : MonoBehaviour
         
     }
 
-    private void ApplyGravity()
+    /*private void ApplyGravity()
     {
         if (AlienController.isGrounded)
         {
@@ -436,5 +436,5 @@ public class EnemyControl : MonoBehaviour
             AlienModel.transform.position += down;
         }
 
-    }
+    }*/
 }

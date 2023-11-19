@@ -13,6 +13,7 @@ TagManager:
   - SlashHitbox
   - SlamHitbox
   - AlienSlapbox
+  - Ground
   layers:
   - Default
   - TransparentFX
