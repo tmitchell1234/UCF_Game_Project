@@ -49,7 +49,11 @@ public class MeshGen : MonoBehaviour
             for (int x = 0; x <= gridX; x++)
             {
                 // Add a node. generateNoise is called twice with different scales to make the terrain look more natural
+<<<<<<< HEAD
                 vertices[i] = new Vector3(x - gridX / 2, generateNoise(x, z, gridScale) + 4 * generateNoise(x + 2, z + 2, gridScale * 5.5f) - Mathf.Pow(1.025f, 0.5f * (z - 120)) - 23.75f, z - 120);
+=======
+                vertices[i] = new Vector3(x - gridX / 2, Mathf.Max(generateNoise(x, z, gridScale) + 4 * generateNoise(x + 2, z + 2, gridScale * 5.5f), 2) - 23.75f, z - 120);
+>>>>>>> c7551979a90fa95cdb3d59e569756b600afe307b
 
                 // Save the node for decoration placement
                 nodePositions.Add(vertices[i] + new Vector3(-2, 21.5f - generateNoise(x, z, gridScale), -2));

@@ -44,12 +44,20 @@ public class MeshGen2 : MonoBehaviour
         // 4 quads in the x direction = 5 vertices in the x direction
         vertices = new Vector3[(gridX + 1) * (gridZ + 1)]; // * 2 + 1 so that the mesh generates both directions from the center
 
+<<<<<<< HEAD
         for (int i = 0, z = 120; z <= gridZ + 120; z++)
+=======
+        for (int i = 0, z = 0; z <= gridZ; z++)
+>>>>>>> c7551979a90fa95cdb3d59e569756b600afe307b
         {
             for (int x = 0; x <= gridX; x++)
             {
                 // Add a node. generateNoise is called twice with different scales to make the terrain look more natural
+<<<<<<< HEAD
                 vertices[i] = new Vector3(x - gridX / 2, generateNoise(x, z, gridScale) + 4 * generateNoise(x + 2, z - 2, gridScale * 5.5f) + Mathf.Pow(1.1f, 0.5f * (z - 240)) - 23.75f, z);
+=======
+                vertices[i] = new Vector3(x - gridX / 2, Mathf.Max(generateNoise(x, -z, gridScale) + 4 * generateNoise(x + 2, -z - 2, gridScale * 5.5f), 2) - 23.75f, z + 120);
+>>>>>>> c7551979a90fa95cdb3d59e569756b600afe307b
 
                 // Save the node for decoration placement
                 nodePositions.Add(vertices[i] + new Vector3(-2, 21.5f - generateNoise(x, z, gridScale), -2));
@@ -99,7 +107,11 @@ public class MeshGen2 : MonoBehaviour
             detailScale = 0.1f;
         }
         float xNoise = (x + this.transform.position.x) / detailScale;
+<<<<<<< HEAD
         float zNoise = (z + this.transform.position.z) / detailScale;
+=======
+        float zNoise = (z + this.transform.position.z) / detailScale + 240;
+>>>>>>> c7551979a90fa95cdb3d59e569756b600afe307b
 
         return noiseHeight * Mathf.PerlinNoise(xNoise, zNoise);
     }
