@@ -23,7 +23,8 @@ public class EnemyControl : MonoBehaviour
 
     Animator AlienAnimator;
 
-
+    public bool flying;
+    private bool floatup;
 
     // used only for debugging falling through the floor
     //[SerializeField] GameObject ground;
@@ -164,10 +165,20 @@ public class EnemyControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(flying)
+        {
+            if (floatup)
+                floatingup();
+            else if (!floatup)
+                floatingdown();
+        }
+
+        
         // if the alien is dead, stop doing everything else
         if (isDead)
         {
 
+            flying = false;
             FlyBackwards();
 
             // let the alien play it's death animation for 5 seconds
@@ -419,6 +430,20 @@ public class EnemyControl : MonoBehaviour
             inRange = true;
         }
         
+    }
+
+    private void floatingup()
+    {
+        /*transform.position.y += 0.4 + Time.deltaTime;
+        yield WaitForSeconds(1);*/
+        floatup = false;
+    }
+
+    private void floatingdown()
+    {
+        /*transform.position.y -= 0.4 + Time.deltaTime;
+        yield WaitForSeconds(1);*/
+        floatup = true;
     }
 
     /*private void ApplyGravity()

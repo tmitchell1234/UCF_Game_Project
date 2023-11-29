@@ -678,6 +678,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenAlienWithBattleAnimations
       objectReference: {fileID: 0}
+    - target: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
         type: 3}
       propertyPath: m_Size.z
@@ -1558,6 +1563,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GreenAlienWithBattleAnimations (Flying)
+      objectReference: {fileID: 0}
+    - target: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
         type: 3}
@@ -2880,6 +2890,142 @@ CapsuleCollider:
   m_Height: 0.51278156
   m_Direction: 1
   m_Center: {x: 0, y: 0.25639078, z: 0}
+--- !u!1001 &1098239250
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -66.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -40.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 101.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 530955913062041304, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_Name
+      value: GreenAlienWithBattleAnimations (Flying v2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 7.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949278841057700073, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456151726241974804, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: flying
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456151726241974804, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: ground
+      value: 
+      objectReference: {fileID: 1887743151}
+    - target: {fileID: 1456151726241974804, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456151726241974804, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: PlayerModel
+      value: 
+      objectReference: {fileID: 7479413947416565853}
+    - target: {fileID: 1456151726241974804, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: playerScript
+      value: 
+      objectReference: {fileID: 236868501599335497}
+    - target: {fileID: 5002676418594425970, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5002676418594425970, guid: 49e0bd6d435deb1488a5736cfd2c313a, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1591268980}
+    - targetCorrespondingSourceObject: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1591268979}
+    - targetCorrespondingSourceObject: {fileID: 7804201064462452504, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1747599743}
+  m_SourcePrefab: {fileID: 100100000, guid: 49e0bd6d435deb1488a5736cfd2c313a, type: 3}
 --- !u!1001 &1109400756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5300,12 +5446,12 @@ PrefabInstance:
     - target: {fileID: 6976169424614665002, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000017313324
+      value: -0.000000017313324
       objectReference: {fileID: 0}
     - target: {fileID: 6976169424614665002, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 9.665234e-10
+      value: -9.665234e-10
       objectReference: {fileID: 0}
     - target: {fileID: 7789942966038434410, guid: 013da9c66d04acc4783e5431de118350,
         type: 3}
@@ -5342,7 +5488,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 50, z: 1}
+  m_Size: {x: 1, y: 40, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1538327979
 Rigidbody:
@@ -5502,6 +5648,60 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.35, y: 0.25067204, z: 0.25}
   m_Center: {x: 0.00000011920929, y: 0.12533584, z: 0.06}
+--- !u!1 &1591268978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 870748588861594722, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1098239250}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1591268979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591268978}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.7, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1591268980
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591268978}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1654502932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5858,6 +6058,39 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1747599741 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7804201064462452504, guid: 49e0bd6d435deb1488a5736cfd2c313a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1098239250}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1747599743
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747599741}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!114 &1788154033 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7420526411651483256, guid: 61a2e146ecb53b14abc2bb76e1f94e9a,
@@ -6994,6 +7227,7 @@ SceneRoots:
   - {fileID: 111217544}
   - {fileID: 94389605}
   - {fileID: 112823876}
+  - {fileID: 1098239250}
   - {fileID: 286810006}
   - {fileID: 2029101723}
   - {fileID: 1281553449}
